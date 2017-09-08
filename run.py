@@ -6,7 +6,8 @@ import time
 import tushare as ts
 
 industry_list = [u'仪器仪表', u'电子信息', u'电子器件']
-
+start_date = '2016-09-07'
+end_date = '2017-09-06'
 
 def get_momentum(x):
     print x
@@ -15,7 +16,7 @@ def get_momentum(x):
     df_hist = None
     while retry > 0:
         try:
-    	    df_hist = ts.get_h_data(x, '2016-09-07', '2017-09-06')
+    	    df_hist = ts.get_h_data(x, start_date, end_date)
         except Exception as e:
             time.sleep(1)
             retry -= 1
@@ -39,4 +40,5 @@ for code in df_e.code.unique():
     if df_e.loc[df_e.code==code, 'momentum'].tolist()[0] != -100:
 	continue
     df_e.loc[df_e.code==code, 'momentum'] = get_momentum(code)
+df_e.sort_values(by='momentum').to_csv('momentum.quant', encoding='utf8')
 
